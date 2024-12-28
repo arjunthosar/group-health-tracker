@@ -1,6 +1,10 @@
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
+import { useState } from "react";
 
 export default function Index() {
+  const [x, setX] = useState(0);
+
+
   return (
     <View
       style={{
@@ -9,7 +13,11 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text style={{ fontSize: 20 }}>{x}</Text>
+      <Button
+        title="Increment"
+        onPress={() => {setX(x + 1); console.log(x)}}
+      />
     </View>
   );
 }
