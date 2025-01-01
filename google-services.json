@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "885900996493",
+    "firebase_url": "https://group-health-tracker-default-rtdb.firebaseio.com",
+    "project_id": "group-health-tracker",
+    "storage_bucket": "group-health-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885900996493:android:df7596bfa2f088119017c4",
+        "android_client_info": {
+          "package_name": "com.toaster210.grouphealthtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1-nb2fLwXU_FxblbjpXWXk13hw8ZgZm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
