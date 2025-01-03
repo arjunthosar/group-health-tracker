@@ -2,7 +2,7 @@ import { Button, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import API_KEY from 'react-native-dotenv';
 import { initializeApp } from "firebase/app";
-import { getDatabase, onValue, ref, set, get } from "firebase/database"; //TODO: export app
+import { getDatabase, onValue, ref, set, get } from "firebase/database"; //TODO: data being read a LOT, get function returning null in release apk
 
 console.log(process.env.EXPO_PUBLIC_API_KEY);
 
@@ -28,29 +28,55 @@ const numRef = ref(database, '/num');
 // }
 
 export default function Index() {
-  let initialX = null;
-  useEffect(() => {
-    get(numRef).then((snapshot) => {
-      initialX = snapshot.val();
-      console.log("1:" + initialX);
-    })
-  }, [initialX]);
-  const [x, setX] = useState(initialX);
+  const [x, setX] = useState(null); // Initialize x to null
 
   useEffect(() => {
-    set(numRef, x);
-    onValue(numRef, (snapshot) => {
-      const data = snapshot.val();
-      setX(data);
-      console.log("data read")
+    let isMounted = true; // Add a flag to prevent setting state after unmount
+
+    const fetchData = async () => {
+      try {
+        const snapshot = await get(numRef);
+        if (isMounted && snapshot.exists()) { // Check if component is still mounted and data exists
+          setX(snapshot.val());
+          console.log("Initial data fetched:", snapshot.val());
+        } else if (isMounted) {
+          console.log("No initial data available.");
+        }
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
+      }
+    };
+
+    fetchData();
+
+    // Set up real-time listener
+    const unsubscribe = onValue(numRef, (snapshot) => {
+      if (isMounted && snapshot.exists()) {
+        setX(snapshot.val());
+        console.log("Data updated:", snapshot.val());
+      } else if (isMounted) {
+        console.log("Data removed");
+      }
     });
-  }, [x])
+
+    return () => {
+      isMounted = false; // Set flag to false on unmount
+      unsubscribe(); // Unsubscribe from the listener
+    };
+  }, []);
+
+  useEffect(() => {
+    if (x !== null) { // Only update Firebase if x is not null
+      set(numRef, x)
+        .catch((error) => {
+          console.error("Error setting data:", error);
+        });
+    }
+  }, [x]);
 
   if (x === null) {
     return <Text>Loading...</Text>;
   }
-
-  console.log("2:" + x);
 
   return (
     <View
@@ -64,13 +90,13 @@ export default function Index() {
       <Button
         title="Increment"
         onPress={() => {
-          setX(x + 1);
+          setX(x + 1); //ignore error
         }}
       />
       <Button
         title = "Decrement"
         onPress={() => {
-          setX(x - 1);
+          setX(x - 1); //ignore error
         }}
       />
     </View>

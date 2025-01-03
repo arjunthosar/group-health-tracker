@@ -11,7 +11,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.toaster210.grouphealthtracker",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true } // ? enable HTTP requests
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +30,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      ["expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        },
+        "ios": {
+          "usesCleartextTraffic": true
+        }
+      }],
       "expo-router",
       [
         "expo-splash-screen",
