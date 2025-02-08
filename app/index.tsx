@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import API_KEY from 'react-native-dotenv';
 import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, set, get } from "firebase/database"; //TODO: data being read a LOT, get function returning null in release apk
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; 
 
 console.log(process.env.EXPO_PUBLIC_API_KEY);
 
@@ -19,7 +20,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-const numRef = ref(database, '/num');
+const page1Ref = ref(database, '/num');
 
 // export default function Init() {
 //   get(numRef).then((snapshot) => {
@@ -27,7 +28,7 @@ const numRef = ref(database, '/num');
 //   })
 // }
 
-export default function Index() {
+function Page1() {
   const [x, setX] = useState(null); // Initialize x to null
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function Index() {
 
     const fetchData = async () => {
       try {
-        const snapshot = await get(numRef);
+        const snapshot = await get(page1Ref);
         if (isMounted && snapshot.exists()) { // Check if component is still mounted and data exists
           setX(snapshot.val());
           console.log("Initial data fetched:", snapshot.val());
@@ -50,7 +51,7 @@ export default function Index() {
     fetchData();
 
     // Set up real-time listener
-    const unsubscribe = onValue(numRef, (snapshot) => {
+    const unsubscribe = onValue(page1Ref, (snapshot) => {
       if (isMounted && snapshot.exists()) {
         setX(snapshot.val());
         console.log("Data updated:", snapshot.val());
@@ -67,7 +68,7 @@ export default function Index() {
 
   useEffect(() => {
     if (x !== null) { // Only update Firebase if x is not null
-      set(numRef, x)
+      set(page1Ref, x)
         .catch((error) => {
           console.error("Error setting data:", error);
         });
@@ -82,10 +83,11 @@ export default function Index() {
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
       }}
     >
+
       <Text style={{ fontSize: 20 }}>{x}</Text>
       <Button
         title="Increment"
@@ -102,3 +104,7 @@ export default function Index() {
     </View>
   );
 }
+
+function Page2() {}
+
+export default Page1;
