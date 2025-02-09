@@ -38,3 +38,6 @@ yarn-error.*
 app-example
 
 .env
+
+#vscode local thing
+tasks.json
