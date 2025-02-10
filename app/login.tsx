@@ -1,9 +1,16 @@
-import { View, Text } from "react-native";
+import { View, Text, TextInput, KeyboardAvoidingView } from "react-native";
+import styles from "./styling";
+import { Platform } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-export default function Login() { //TODO: Log In & Sign Up buttons, connect to cloud firestore
+export default function Login() { //TODO: connect to cloud firestore
     return (
-        <View>
-            <Text>login</Text>
-        </View>
+        <KeyboardAwareScrollView style={styles.page}>
+            <View style={{alignItems: 'center'}}>
+                <Text style={{fontSize: 30, marginTop: 200}}>Login</Text>
+                <TextInput placeholder="Username" style={[styles.input, { marginTop: 150 }]}/>
+                <TextInput placeholder="Password" style={styles.input} secureTextEntry={true} />
+            </View>
+        </KeyboardAwareScrollView>
     );
 } 
